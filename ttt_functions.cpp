@@ -5,52 +5,52 @@
 
 using namespace std;
 // var
-string player1;
-string player2;
-string player;
-int row;
-int col;
-char letter;
-char piece;
-char c = 'A';
-bool winner = false;
-bool taken = false;
-char board[3][3];
-map<string, char> mapHash;
+string player1;            // player 1 name
+string player2;            // player 2 name
+string player;             // current player
+int row;                   // rows of board
+int col;                   // col of board
+char letter;               // pos of board with letter naming
+char piece;                // piece to be used by either players
+char c = 'A';              // char of A for the for loop to loop letters from A to I
+bool winner = false;       // winner flag
+bool taken = false;        // taken pos flag
+char board[3][3];          // char array to make tictactoe board
+map<string, char> mapHash; // hashmap to contain each of the player's pieces
 // fnct
 void greet()
 {
     cout << "\nWelcome to Tic-Tac-Toe!\n";
     cout << "Please Input Player1: \n";
-    cin >> player1;
+    cin >> player1; // input player 1
     cout << "\n";
     cout << "Please Input Player2: \n";
-    cin >> player2;
+    cin >> player2; // input player 2
     cout << "\n";
-    player = player1;
+    player = player1; // current player is player 1 automatically
     cout << player << ", select Piece you want to put down: X or O\n";
-    cin >> piece;
-    mapHash.insert({player1, piece});
-    if (piece == 'X')
+    cin >> piece;                     // input piece player 1 wants
+    mapHash.insert({player1, piece}); // hashmap save the player's choice for later use
+    if (piece == 'X')                 // if player 1 has X
     {
         cout << player2 << ", you are using the O piece.\n";
-        mapHash.insert({player2, 'O'});
+        mapHash.insert({player2, 'O'}); // player 2 recieves the piece O
     }
-    else if (piece == 'O')
+    else if (piece == 'O') // if player 1 has O
     {
         cout << player2 << ", you are using the X piece.\n";
-        mapHash.insert({player2, 'X'});
+        mapHash.insert({player2, 'X'}); // player 2 recieves the piece X
     }
     cout << "\n";
 }
 void draw()
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) // for loop iterating through board array
     {
         for (int j = 0; j < 3; j++)
         {
-            board[i][j] = c;
-            c += 1;
+            board[i][j] = c; // first pos gets A
+            c += 1;          // every next pos gets the next letter of the alphabet
         }
     }
     ////////first-row////////////
@@ -98,7 +98,7 @@ void draw()
 }
 void display_board()
 {
-    update_board();
+    update_board(); // call to update_board method
     ////////first-row////////////
     cout << "   |"
          << "   |"
@@ -144,85 +144,86 @@ void display_board()
 }
 void update_board()
 {
-    place_piece();
-    board[row][col] = piece;
+    place_piece();           // call to place_piece
+    board[row][col] = piece; // updates the input made by user for the row, col, and piece they want
 }
 void place_piece()
 {
     cout << player << ", which space do you want to put a piece: A-I\n";
-    cin >> letter;
-    convert_letter(letter);
-    bool taken = taken_spot(row, col);
-    if (taken)
+    cin >> letter;                     // input for letter pos
+    convert_letter(letter);            // call to convert_letter method
+    bool taken = taken_spot(row, col); // var using taken_spot method
+    if (taken)                         // if taken is true
     {
         cout << "This spot is already taken. Select new position.\n";
-        place_piece();
+        place_piece(); // use recursion to by calling place_piece again
     }
-    else
+    else // spot is free
     {
-        switch_turn();
+        switch_turn(); // call to switch_turns method
     }
 }
 int convert_letter(char letter)
 {
-    switch (letter)
+    switch (letter) // switch statement accepting a letter pos as input and converting letters into coord. of rows/cols
     {
-    case 'A':
+    case 'A': // (0,0)
         row = 0;
         col = 0;
         break;
-    case 'B':
+    case 'B': // (0,1)
         row = 0;
         col = 1;
         break;
-    case 'C':
+    case 'C': // (0,2)
         row = 0;
         col = 2;
         break;
-    case 'D':
+    case 'D': // (1,0)
         row = 1;
         col = 0;
         break;
-    case 'E':
+    case 'E': // (1,1)
         row = 1;
         col = 1;
         break;
-    case 'F':
+    case 'F': // (1,2)
         row = 1;
         col = 2;
         break;
-    case 'G':
+    case 'G': // (2,0)
         row = 2;
         col = 0;
         break;
-    case 'H':
+    case 'H': // (2,1)
         row = 2;
         col = 1;
         break;
-    case 'I':
+    case 'I': // (2,2)
         row = 2;
         col = 2;
         break;
     default:
         break;
     }
-    return row, col;
+    return row, col; // returns the value for the row and the col
 }
 void switch_turn()
 {
-    if (player == player1 && winner != true)
+    if (player == player1) // checks if the current player is player 1
     {
-        piece = mapHash.at(player1);
-        player = player2;
+        piece = mapHash.at(player1); // retrieves the char value stored with player 1
+        player = player2;            // makes player 2 the next current player
     }
-    else
+    else // checks if the current player is player 2
     {
-        piece = mapHash.at(player2);
-        player = player1;
+        piece = mapHash.at(player2); // retrieves the char value stored with player 2
+        player = player1;            // makes player 1 the next current player
     }
 }
 bool win_conditions()
 {
+    // ALL WIN CONDITIONS WITHIN THE GAME OF TIC TAC TOE:
     if ((board[0][0] == mapHash.at(player1) &&
          board[0][1] == mapHash.at(player1) &&
          board[0][2] == mapHash.at(player1)) ||
@@ -248,9 +249,9 @@ bool win_conditions()
          board[1][1] == mapHash.at(player1) &&
          board[2][0] == mapHash.at(player1)))
     {
-        winner = true;
-        player = player1;
-        return winner;
+        winner = true;    // sets winner flag to true
+        player = player1; // sets the player who won
+        return winner;    // returns the value for winner to end game
     }
     else if ((board[0][0] == mapHash.at(player2) &&
               board[0][1] == mapHash.at(player2) &&
@@ -277,27 +278,27 @@ bool win_conditions()
               board[1][1] == mapHash.at(player2) &&
               board[2][0] == mapHash.at(player2)))
     {
-        winner = true;
-        player = player2;
-        return winner;
+        winner = true;    // sets winner flag to true
+        player = player2; // sets the player who won
+        return winner;    // returns the value for winner to end game
     }
-    else
+    else // if no win condition is met
     {
-        return winner;
+        return winner; // win flag remains set to false
     }
 }
 bool taken_spot(int row, int col)
 {
-    if (board[row][col] == 'X' || board[row][col] == 'O')
+    if (board[row][col] == 'X' || board[row][col] == 'O') // checks if spot requested is closed with piece
     {
         return true;
     }
-    else
+    else // spot open
     {
         return false;
     }
 }
 void end_game()
 {
-    cout << player << " has won the game!\n";
+    cout << player << " has won the game!\n"; // current player has won the game
 }
